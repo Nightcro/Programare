@@ -1,0 +1,101 @@
+Obs.: Main-ul are asa de multe linii din cauza ca l-am facut sa mearga
+orice s-ar intampla (mai multe argumente decat trebuie etc.) memoria va fi
+eliberata si se va afisa eroarea respectiva.
+
+In cadrul programului se gaseste o structura denumita pixel.
+Acesta se afla in pixel.h.
+Operatiile au fost organizate in functii pentru citirea mai usoara.
+La fel si pentru mesajele de eroare si functiile de 
+initializare, citire, printare a unei structuri de tip pixel.
+
+Functiile folosite in cadrul temei se pot gasi in
+header-urile respective fiecarei surse pentru o citere mai usoara.
+
+Pentru ca stim formatul pe care trebuie sa-l primim la fiecare
+operatie, vom stoca argumentele intr-un vector de tip int pt a 
+fi mai usor de citit.
+
+Pentru a observa ce primeste fiecare functie verifica
+Operations.h, Pixel.h, Errors.h.
+
+Obs.: La inceput de fiecare operatie se verifica parametrii.
+
+Operatii:
+1) Crop:
+Functia crop creeaza o noua imagine (aux) de tip pixel
+cu dimensiunile aflate din argumente:
+width = end_col + start_col + 1;
+height = end_line - start_line + 1;
+Si copiaza pixelii care genereaza patrulaterul resp.
+La final elibereaza memoria originala a imaginii
+si returneaza adresa imaginii create din crop.
+
+2) Resize:
+Functia resize creeza o noua imagine (aux) cu dim h_res si w_res
+in care se va stoca crop-ul imaginii originale daca h_res si w_res
+sunt mai mici decat cele originale. In caz contrar imaginea (aux)
+va fi copiata si umpluta cu pixeli albi si se va elibera memoria 
+imaginii originale.
+La final se returneaza adresa imaginii noi.
+
+3) Color Region:
+Functia Color Region primeste imaginea originala
+si modifica valorile pixelilor cu parametrii primiti.
+
+4) Blur:
+Functia blur creeaza o noua imagine (aux) in care se va stoca pixelii
+creati in urma mediei aritmetice a vecinilor lor.
+La terminarea primei iteratii a for-ului principal se va elibera memoria
+imaginii temp (imagine originala) si va pointa catre adresa imaginii
+noi create (aux).
+La final se returneaza imaginea cu efectul de blur dupa n interatii.
+
+5) Rotation:
+Functia de rotatie va roti imaginea n <= 3 ori.
+Mai intai se initializeaza o matrice de dimensiuni interschimbate (aux)
+Ex: height = 3  width = 2
+a b 	e c a     (0,0) (0,1)     (2,0) (1,0) (0,0)
+c d 	f d b 	  (1,0) (1,1)	  (2,2) (1,1) (0,1)
+e f               (2,0) (2,1)
+Dupa cum se poate observa daca rotim 90 grade
+a=(0,0) va ajunge pe pozitia a=(height - 1, 0) etc.
+Si de aceea in functie avem un contor care se deicrementeaza
+plecand de la height-ul maxim.
+Astfel se copiaza matricea originala intr-una cu dimensiunile 
+interschimbate.
+La final se elibereaza memoria imaginii originale si se interschimba
+dimensiunile pentru o noua repetare rotatiei.
+
+6) Fill:
+Functia fill verifica mai intai daca pixelul de la care incepem sa umplem
+este sau nu acelasi cu valorile date.
+In caz contrar se apeleaza o functie recursiva (fill_recursive) 
+descris ca in urmatorul link:
+https://en.wikipedia.org/wiki/Flood_fill 
+Stack-based recursive implementation (four-way)
+dar modificat un pic pentru programul nostru.
+Dupa ce a fost apelata functia fill_recursive.
+Avem 2 conditii de verificat.
+1) Daca am iesit din matrice.
+2) Daca pixelul pe care am ajuns seamana sau nu ce cel original.
+Urmatoarele linii reprezinta apelarea recursiva la fata de pixelul
+pe care ne aflam cu deplasare in sus, jos, dreapta, stanga.
+
+In Pixel.c gasim functiile de initializare a imaginii, citire, afisare
+si eliberare.
+
+In Errors.c gasim functiile pentru fiecare tip de eroare
+1) check_param - este folosit pentru verificarea a 2 parametrii
+fara a elibera memoria;
+2) check_param_free - la fel ca check_param doar ca elibereaza si memoria;
+3) check_more_param - este folosit pentru a verifica 4 parametrii
+avand si optiunea de eliberare a memoriei;
+4) error_initialise_argum - este folosita in momentul in care am primit o 
+instructiune de modificare/afisare a imaginii curente dar aceasta nu a 
+fost initializata sau o instructiune cu un cod de operatie nespecificat;
+5) error_initialise_argum_free - la fel ca error_initialise_argum numai
+ca are optiunea de eliberare a memoriei;
+6) get_param - returneaza un vector cu toti parametrii cititi (nu prea
+am gasit un loc unde sa o pun), de asemenea am construit functia
+astfel incat sa nu ia in considerare whitespaces doar '\n' il ia in
+considerare.

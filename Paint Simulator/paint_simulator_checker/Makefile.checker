@@ -1,0 +1,13 @@
+CFLAGS := -Wall -Wextra -Werror -pedantic -std=c99
+
+EXEC := raw_to_ppm
+
+build: $(EXEC)
+	gcc -o tracker -Wall tracker_src/tracker.c -lm
+	
+$(EXEC): $(EXEC).c
+	$(CC) $(CFLAGS) $< -o $@
+
+clean:
+	rm -f $(EXEC)
+	rm -f tracker *.in *.out *.time *.exec *.ok
