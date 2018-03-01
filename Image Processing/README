@@ -1,0 +1,62 @@
+Program realizat de Mindru Alexandru-Ionut
+Grupa 311CB
+
+!!!Nu am umblat la bmp_header.h, este exact cum l-am gasit in checker
+
+Obs.: Nu are leak-uri de memorie si toti pointerii sunt verificati daca sunt
+ initializati corect.
+
+In cadrul programului se gasesc mai multe structuri:
+-In bmp_header.h: bmp_fileheader, bmp_infoheader
+-In queue.h: position, list
+-In image.h: BitMap, image
+
+Structurile contin urmatoarele variabile (nu voi explica ce se afla si in 
+bmp_header.h):
+In queue.h list - reprezinta queue-ul in care sunt stocati indexii i si j
+(adica pozitia dintr-o matrice)
+In image.h avem 2 structuri:
+BitMap ce reprezinta un pixel RGB si mai contine si variabila used folosita la 
+task-ul 3 si 4
+image o structura ce contine cele 3 structuri adunate bmp_filehader, 
+bmp_infoheader si o matrice de BitMap (reprezinta imaginea)
+
+Operatiile au fost organizate in functii pentru citirea mai usoara.
+La fel si functiile de initializare, citire, printare a unei structuri de tip 
+image.
+
+Functiile folosite in cadrul temei se pot gasi in
+header-urile respective fiecarei surse pentru o citere mai usoara.
+
+Pentru a observa ce primeste fiecare functie verifica
+tasks.h, queue.h, image.h.
+
+In queue.c gasim functiile de initializare a queue-ului, push si check.
+Queue a fost creat pentru task-ul 3 si contine urmatoarele functii:
+create_stack - initializeaza queue-ul ca fiind NULL
+push - adauga elemente in queue in cele 2 cazuri (cand nu exista niciun
+element in queue sau cand exista cel putin unul)
+check - verifica daca elementul position care se baga pe queue exista deja 
+(a fost creat pentru a reduce timpul de executie pentru task-ul 3)
+
+Im image.c gasim urmatoarele functii:
+initialise_matrix - initializeaza matricea BitMap
+free_matrix - elibereaza memoria unei matrici BitMap
+read_image - citeste imagine dintr-o sursa bmp
+write_image - scrie imaginea intr-o sursa bmp
+
+In tasks.c gasim urmatoarele functii:
+tasks - reprezinta functia principala care apeleaza task-urile 1,2,3,4
+Obs.: toate char-urile in care sunt stocate numele fisierelor de intrare si de
+scriere sunt alocate dinamic si eliberate.
+task_1 - se creeaza imaginea alb-negru
+task_2 - foloseste 8 conditii pentru a calcula pixelii si inca 3 conditii
+pentru a verifica daca se afla intre 0 si 255 canalele RGB
+task_3 - se foloseste de un queue pentru a crea zona maxima si de variabila 
+used continuta in fiecare pixel pentru a determina daca pixelul pe care se 
+verifica vecinii a fost umblat si pus intr-o zona
+La final se scrie intr-un fisier bin compresia
+task_4 - reprezinta operatia inversa compresiei, mai intai se creeaza matricea
+cu zonele delimitate de pixelii respectivi (acesti pixeli sunt marcati
+refolosind variabila used) si in cele din urma zonele sunt umplute in functie
+de margini (folosindu-ne tot de variabila used)
